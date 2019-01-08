@@ -190,17 +190,16 @@ function emptyApiFactory() {
 
 if (typeof window !== 'undefined') {
   if ('BroadcastChannel' in window) {
-    const API = broadcastChannelApiFactory();
+    module.exports = broadcastChannelApiFactory();
   } else if (false && 'SharedWorker' in window) {
-    const API = sharedWorkerApiFactory();
+    module.exports = sharedWorkerApiFactory();
   } else if ('localStorage' in window) {
-    const API = localStorageApiFactory();
+    module.exports = localStorageApiFactory();
   } else {
-    const API = emptyApiFactory();
+    module.exports = emptyApiFactory();
   }
 } else {
   // Server side call
-  const API = emptyApiFactory();
+  module.exports = emptyApiFactory();
 }
 
-module.exports = API
