@@ -178,7 +178,7 @@ function localStorageApiFactory() {
 function emptyApiFactory() {
 
   function noop() {
-    console.warn('across-tabs messaging is not supported.');
+    if (typeof window !== 'undefined') console.warn('across-tabs messaging is not supported.');
   }
 
   return {
@@ -188,13 +188,18 @@ function emptyApiFactory() {
   };
 }
 
-if ('BroadcastChannel' in window) {
-  const API = broadcastChannelApiFactory();
-} else if (false && 'SharedWorker' in window) {
-  const API = sharedWorkerApiFactory();
-} else if ('localStorage' in window) {
-  const API = localStorageApiFactory();
+if (typeof window !== 'undefined') {
+  if ('BroadcastChannel' in window) {
+    const API = broadcastChannelApiFactory();
+  } else if (false && 'SharedWorker' in window) {
+    const API = sharedWorkerApiFactory();
+  } else if ('localStorage' in window) {
+    const API = localStorageApiFactory();
+  } else {
+    const API = emptyApiFactory();
+  }
 } else {
+  // Server side call
   const API = emptyApiFactory();
 }
 
